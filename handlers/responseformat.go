@@ -3,13 +3,15 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+
+	Schema "github.com/sridharu346/loginPractice/schema"
 )
 
 func ResponseFormat(w http.ResponseWriter, Message string, StatusCode int, Data interface{}) {
-	response := Schema.response{
+	response := Schema.Response{
 		StatusCode: StatusCode,
 		Message:    Message,
-		Data:       Data
+		Data:       Data,
 	}
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {

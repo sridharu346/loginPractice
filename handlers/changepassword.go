@@ -2,18 +2,18 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	DBconfig "github.com/sridharu346/loginPractice/dbconfig"
-	schema "github.com/sridharu346/loginPractice/schema"
+	"github.com/sridharu346/loginPractice/schema"
 	"github.com/sridharu346/loginPractice/validation"
 )
 
-func SignupHandler(w http.ResponseWriter, r *http.Request) {
-	//signup
-	if r.Method != "POST" {
+func ChangepasswordHandler(w http.ResponseWriter, r *http.Request) {
+	//changepassword
+
+	if r.Method != "PUT" {
 		ResponseFormat(w, "Method not allowed", http.StatusMethodNotAllowed, nil)
 		return
 	}
@@ -22,30 +22,26 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		ResponseFormat(w, "DB connection failed", http.StatusInternalServerError, nil)
 	}
 	defer db.Close()
+
 	//reading the body
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		ResponseFormat(w, err.Error(), http.StatusInternalServerError, nil)
 		return
 	}
-	// unmarshal the body
-	var newCustomer schema.CustomerDetails
-	err = json.Unmarshal(body, &newCustomer)
+
+	// un marshal the body
+	var newPassword schema.ChangePassword
+	err = json.Unmarshal(body, &newPassword)
 	if err != nil {
 		ResponseFormat(w, err.Error(), http.StatusInternalServerError, nil)
 		return
 	}
-	// validation
-	validate, err := validation.SignupValidation(db, newCustomer)
+
+	//validation
+	validate, err := validation.ChangePasswordValidation(db, newPassword)
 	if err != nil {
 		ResponseFormat(w, err.Error(), validate, nil)
-
 	}
-	//pushing data
-	ErrorCode, err := DBconfig.InsertCustomer(db, newCustomer)
-	if err != nil {
-		ResponseFormat(w, err.Error(), ErrorCode, nil)
-		return
-	}
-	ResponseFormat(w, fmt.Sprintf("Customer %s created successfully", newCustomer.Email), http.StatusCreated, nil)
+	ResponseFormat(w, "ChangePassword successful!", http.StatusOK, nil)
 }

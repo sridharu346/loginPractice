@@ -19,6 +19,8 @@ func main() {
 
 	//handling the routes
 	http.HandleFunc("/Signup", Handler.SignupHandler)
+	http.HandleFunc("/Login", Handler.LoginpageHandler)
+	http.HandlerFunc("/Change", Handler.ChangepasswordHandler)
 
 	//hosting the server
 	fmt.Println("Local host is servered at port 8000")
